@@ -40,9 +40,18 @@ function sample() {
 */
 
 function createDB() {
+  // Make different connection, not to specific database but server as a whole
+  const connection = mysql.createConnection({
+    host: process.env.db_host,
+    user: process.env.db_user,
+    password: process.env.db_password,
+    multipleStatements: true
+  });
+
   connection.connect();
 
-  const query = `CREATE DATABASE wypozyczalnia;
+  // Creates database 'wypozyczalnia'. Adds default 'Dobry film' product
+  const query = `CREATE DATABASE wypozyczalnia; 
     USE wypozyczalnia;
     CREATE TABLE product (
       id_product int(10) UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -68,7 +77,9 @@ function createDB() {
       PRIMARY KEY (id_rental),
       FOREIGN KEY (id_product) REFERENCES product(id_product),
       FOREIGN KEY (id_customer) REFERENCES customer(id_customer)
-    );`;
+    );
+    INSERT INTO product(name, price_per_day, status)
+      VALUES ('Dobry film', 3.99, 'available');`;
 
   connection.query(query, (error, results, fields) => {
     if (error) throw error;
@@ -76,3 +87,5 @@ function createDB() {
 
   connection.end();
 }
+
+createDB();
