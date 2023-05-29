@@ -1,8 +1,9 @@
-export default function AdminPage() {
+import { Container } from "@mui/material";
 
+export default function AdminPage() {
   return (
-    <>
-    Admin Page
-    </>
+    <Container maxWidth='xs'>
+      Admin Page
+    </Container>
   )
 }

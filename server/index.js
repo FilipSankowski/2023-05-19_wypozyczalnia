@@ -63,6 +63,17 @@ app.get('/getCustomers', (req, res) => {
   });
 });
 
+app.post('/getCustomerID', (req, res) => {
+  const name = req.body.name;
+  const surname = req.body.surname;
+
+  const queryText = `SELECT id_customer FROM customer WHERE name = '${name}' AND surname = '${surname}';`;
+  pool.query(queryText, (error, results, fields) => {
+    if (error) throw error;
+    res.send('done');
+  });
+})
+
 app.post('/createCustomer', (req, res) => {
   const name = req.body.name;
   const surname = req.body.surname;
