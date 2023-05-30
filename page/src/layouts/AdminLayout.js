@@ -5,7 +5,7 @@ import { Box, Button, Grid } from '@mui/material';
 
 function NavbarButton(props) {
   return (
-    <Button>
+    <Button sx={{width: '100%'}}>
       <Link style={{textDecoration: 'none'}} to={props.to}>{props.label}</Link>
     </Button>
   )

@@ -1,8 +1,16 @@
-import { Box, Container, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 
-function SelectProductOptions() {
+
+export default function Home() {
+  const defaultRentData = {
+    name:'',
+    surname:'',
+    email:'',
+    id_product:''
+  };
+  const [rentData, setRentData] = useState(defaultRentData)
   const [productArray, setProductArray] = useState([]);
 
   useEffect(() => {
@@ -21,30 +29,19 @@ function SelectProductOptions() {
         </MenuItem>
       )
     })
-    : []
+    : [<MenuItem value={0} key={0}>No products available</MenuItem>]
   );
 
-  return optionList;
-}
-
-export default function Home() {
-  const defaultRentData = {
-    name:'',
-    surname:'',
-    email:'',
-    id_product:''
-  };
-  const [rentData, setRentData] = useState(defaultRentData)
-
   const handleChange = (e) => {
-    const id = e.target.id;
+    const name = e.target.name;
     const value = e.target.value;
-    setRentData({...rentData, [id]:value});
+    setRentData({...rentData, [name]:value});
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(rentData);
+    setRentData(defaultRentData);
   }
 
   return (
@@ -52,41 +49,59 @@ export default function Home() {
       <Box sx={{width:'100%'}}>
         Home
       </Box>
-      <FormControl >
+      <FormControl fullWidth>
         <TextField 
           required
-          id='name'
+          name='name'
           label='Name'
           variant='standard'
-          value={rentData.name || ''}
+          value={rentData.name}
           onChange={handleChange}
           margin='dense'
         />
+      </FormControl>
+      <FormControl fullWidth>
         <TextField 
           required
-          id='surname'
+          name='surname'
           label='Surname'
           variant='standard'
-          value={rentData.surname || ''}
+          value={rentData.surname}
           onChange={handleChange}
           margin='dense'
         />
+      </FormControl>
+      <FormControl fullWidth>
         <TextField 
-          id='email'
+          name='email'
           label='Email'
           variant='standard'
-          value={rentData.email || ''}
+          value={rentData.email}
           onChange={handleChange}
           margin='dense'
         />
+      </FormControl>
+      <FormControl variant="standard" required margin='dense' fullWidth>
+        <InputLabel id='id_product_label'>Product</InputLabel>
         <Select
-          id='product'
+          labelId='id_product_label'
+          id='id_product'
           label='Product'
-          value={rentData.product || ''}
+          name='id_product'
+          value={rentData.id_product}
           onChange={handleChange}
         >
-          <SelectProductOptions />
+          {optionList}
         </Select>
+      </FormControl>
+      <FormControl>
+        <Button
+          variant='text'
+          name='submit'
+          onClick={handleSubmit}
+        >
+          Submit
+        </Button>
       </FormControl>
     </Container>
   )
