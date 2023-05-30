@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './index.css'
 
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
@@ -10,6 +11,10 @@ import AdminPage from './pages/AdminPage';
 import ProductStats from './pages/ProductStats';
 import CustomerStats from './pages/CustomerStats';
 import RentalStats from './pages/RentalStats';
+
+// TODO:
+// 1. validate required fields (Home.js)
+// 2. Move inline css to index.css (Home.js)
 
 export default function App() {
   return (

@@ -1,9 +1,23 @@
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 
 
-export default function Home() {
+function WelcomeText() {
+  return (
+    <Stack 
+    alignItems='center' 
+    justifyContent='center' 
+    spacing={0}
+    sx={{width:'100%'}}
+    >
+      <h1>Welcome to Car Rental Service</h1><br/>
+      Complete the simple form on the right to rent your first item!
+    </Stack>
+  )
+}
+
+function UserForm() {
   const defaultRentData = {
     name:'',
     surname:'',
@@ -29,7 +43,9 @@ export default function Home() {
         </MenuItem>
       )
     })
-    : [<MenuItem value={0} key={0}>No products available</MenuItem>]
+    : [<MenuItem value={0} key={0} disabled>
+        No products available at the moment, sorry!
+      </MenuItem>]
   );
 
   const handleChange = (e) => {
@@ -46,10 +62,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Box sx={{width:'100%'}}>
-        Home
-      </Box>
-      <FormControl fullWidth>
+      <FormControl sx={{width: '47%', margin: '0 3% 0 0'}} margin='dense'>
         <TextField 
           required
           name='name'
@@ -57,10 +70,9 @@ export default function Home() {
           variant='standard'
           value={rentData.name}
           onChange={handleChange}
-          margin='dense'
         />
       </FormControl>
-      <FormControl fullWidth>
+      <FormControl sx={{width: '47%', margin: '0 0 0 3%'}} margin='dense'>
         <TextField 
           required
           name='surname'
@@ -68,17 +80,15 @@ export default function Home() {
           variant='standard'
           value={rentData.surname}
           onChange={handleChange}
-          margin='dense'
         />
       </FormControl>
-      <FormControl fullWidth>
+      <FormControl fullWidth margin='dense'>
         <TextField 
           name='email'
           label='Email'
           variant='standard'
           value={rentData.email}
           onChange={handleChange}
-          margin='dense'
         />
       </FormControl>
       <FormControl variant="standard" required margin='dense' fullWidth>
@@ -94,7 +104,7 @@ export default function Home() {
           {optionList}
         </Select>
       </FormControl>
-      <FormControl>
+      <FormControl margin='dense' className='trueCentered' fullWidth>
         <Button
           variant='text'
           name='submit'
@@ -104,5 +114,20 @@ export default function Home() {
         </Button>
       </FormControl>
     </Container>
+  )
+}
+
+export default function Home() {
+
+
+  return (
+    <Grid container spacing={0}>
+      <Grid item sm={6}>
+        <WelcomeText />
+      </Grid>
+      <Grid item sm={6}>
+        <UserForm />
+      </Grid>
+    </Grid>
   )
 }
