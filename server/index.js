@@ -63,17 +63,6 @@ app.get('/getCustomers', (req, res) => {
   });
 });
 
-app.post('/getCustomerID', (req, res) => {
-  const name = req.body.name;
-  const surname = req.body.surname;
-
-  const queryText = `SELECT id_customer FROM customer WHERE name = '${name}' AND surname = '${surname}';`;
-  pool.query(queryText, (error, results, fields) => {
-    if (error) throw error;
-    res.send('done');
-  });
-})
-
 app.post('/createCustomer', (req, res) => {
   const name = req.body.name;
   const surname = req.body.surname;
@@ -87,6 +76,14 @@ app.post('/createCustomer', (req, res) => {
     res.send('done');
   });
 })
+
+app.get('/getRentals', (req, res) => {
+  const query = 'SELECT * FROM rental;';
+  pool.query(query, (error, results, fields) => {
+    if (error) throw error;
+    res.send(results);
+  });
+});
 
 // Creates new record in table 'rental' and updates record in table 'product' identified by id_product
 // to have 'status' = 'unavailable'

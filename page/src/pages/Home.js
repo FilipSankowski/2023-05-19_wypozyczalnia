@@ -17,25 +17,38 @@ function WelcomeText() {
   )
 }
 
+function isFormDataValid(dataObj) {
+  for(const key of Object.keys(dataObj)) {
+    if (!dataObj[key] || dataObj[key].length === 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function UserForm() {
   const defaultRentData = {
     name:'',
     surname:'',
-    email:'',
     id_product:''
   };
   const [rentData, setRentData] = useState(defaultRentData)
-  const [productArray, setProductArray] = useState([]);
+  const [productList, setProductList] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
 
   useEffect(() => {
-    if (productArray.length === 0) {
+    if (productList.length === 0) {
       axios.get('http://127.0.0.1:4000/getProducts/available')
-      .then((res) => {setProductArray(res.data)});
+      .then((res) => {setProductList(res.data)});
     }
-  }, [productArray.length]);
+    if (customerList.length === 0) {
+      axios.get('http://127.0.0.1:4000/getCustomers')
+      .then((res) => {setCustomerList(res.data)});
+    }
+  }, [productList.length, customerList.length]);
 
-  const optionList = (productArray.length > 0 ?
-    productArray.map((product) => {
+  const optionList = (productList.length > 0 ?
+    productList.map((product) => {
       const optionText = `${product.name} - ${product.price}zł`;
       return (
         <MenuItem value={product.id_product} key={product.id_product}>
@@ -48,6 +61,15 @@ function UserForm() {
       </MenuItem>]
   );
 
+  const getCustomerId = (match) => {
+    for(const customer of customerList) {
+      if(customer.name === match.name && customer.surname === match.surname) {
+        return customer.id_customer;
+      }
+    }
+    return false
+  }
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -57,6 +79,25 @@ function UserForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(rentData);
+
+    if(isFormDataValid(rentData)) {
+      // Get all customers, search if in them specified exist
+      // Add new user, or get his id and add rental
+      const customerId = getCustomerId(rentData);
+      console.log(customerId);
+      if (customerId) {
+        axios.post('http://127.0.0.1:4000/createRental', {
+          id_product: rentData.id_product,
+          id_customer: customerId
+        });
+      } else {
+        alert('Error: user does not exist')
+      }
+
+    } else {
+      alert('Error: Not every required field was filled')
+    }
+    
     setRentData(defaultRentData);
   }
 
@@ -87,7 +128,7 @@ function UserForm() {
           name='email'
           label='Email'
           variant='standard'
-          value={rentData.email}
+          value={rentData.email || ''}
           onChange={handleChange}
         />
       </FormControl>
@@ -118,7 +159,6 @@ function UserForm() {
 }
 
 export default function Home() {
-
 
   return (
     <Grid container spacing={0}>
