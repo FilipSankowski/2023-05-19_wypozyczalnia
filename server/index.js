@@ -78,7 +78,22 @@ app.post('/createCustomer', (req, res) => {
 })
 
 app.get('/getRentals', (req, res) => {
-  const query = 'SELECT * FROM rental;';
+  /*
+  Returns like: {
+    id_rental
+    id_product
+    id_customer
+    product
+    customer
+    rent_date
+    return_date
+    status
+  }
+  */
+  const query = `SELECT rental.id_rental, rental.id_product, rental.id_customer, product.name AS product, CONCAT(customer.name, ' ', customer.surname) AS	customer, rental.rent_date, rental.return_date, rental.status
+  FROM rental
+  JOIN product ON rental.id_product = product.id_product
+  JOIN customer ON rental.id_customer = customer.id_customer`;
   pool.query(query, (error, results, fields) => {
     if (error) throw error;
     res.send(results);

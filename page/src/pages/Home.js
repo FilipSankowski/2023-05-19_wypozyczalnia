@@ -123,15 +123,6 @@ function UserForm() {
           onChange={handleChange}
         />
       </FormControl>
-      <FormControl fullWidth margin='dense'>
-        <TextField 
-          name='email'
-          label='Email'
-          variant='standard'
-          value={rentData.email || ''}
-          onChange={handleChange}
-        />
-      </FormControl>
       <FormControl variant="standard" required margin='dense' fullWidth>
         <InputLabel id='id_product_label'>Product</InputLabel>
         <Select
