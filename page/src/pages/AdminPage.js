@@ -61,10 +61,13 @@ function AddProductForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
     if(isFormDataValid(formData)) {
-      // Code if data is valid
+      axios.post('http://127.0.0.1:4000/createProduct', {
+        name: formData.name,
+        price: formData.price
+      })
+      .then(() => {alert('Product added successfully')});
     } else {
       alert('Error: Not every required field was filled')
     }
@@ -123,10 +126,14 @@ function AddCustomerForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
     if(isFormDataValid(formData)) {
-      // Code if data is valid
+      axios.post('http://127.0.0.1:4000/createCustomer', {
+        name: formData.name,
+        surname: formData.surname,
+        email: formData.email
+      })
+      .then(() => {alert('User added successfully')});
     } else {
       alert('Error: Not every required field was filled')
     }
@@ -180,13 +187,13 @@ function AddCustomerForm() {
 
 function CompleteRentalForm() {
   const defaultFormData = {
-    id_rental:''
+    id_product:''
   };
   const [formData, setFormData] = useState(defaultFormData);
   const [rentalList, setRentalList] = useState([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:4000/getRentals')
+    axios.get('http://127.0.0.1:4000/getRentals/pending')
     .then((res) => {setRentalList(res.data)});
   }, []);
 
@@ -194,7 +201,7 @@ function CompleteRentalForm() {
     rentalList.map((rental) => {
       const optionText = `${rental.product} -> ${rental.customer}`;
       return (
-        <MenuItem value={rental.id_rental} key={rental.id_rental}>
+        <MenuItem value={rental.id_product} key={rental.id_product}>
           {optionText}
         </MenuItem>
       )
@@ -212,10 +219,12 @@ function CompleteRentalForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
     if(isFormDataValid(formData)) {
-      // Code if data is valid
+      axios.post('http://127.0.0.1:4000/completeRental', {
+        id_product: formData.id_product
+      })
+      .then(() => {alert('Rental completed successfully')});
     } else {
       alert('Error: Not every required field was filled')
     }
@@ -226,13 +235,13 @@ function CompleteRentalForm() {
   return (
     <Container>
       <FormControl variant="standard" required margin='dense' fullWidth>
-        <InputLabel id='id_rental_label'>Rental</InputLabel>
+        <InputLabel id='id_product_label'>Rental</InputLabel>
         <Select
-          labelId='id_rental_label'
-          id='id_rental'
+          labelId='id_product_label'
+          id='id_product'
           label='Rental'
-          name='id_rental'
-          value={formData.id_rental}
+          name='id_product'
+          value={formData.id_product}
           onChange={handleChange}
         >
           {optionList}
