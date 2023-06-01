@@ -77,7 +77,9 @@ app.post('/createCustomer', (req, res) => {
   });
 })
 
+// By default returns all records from table product
 // When called with additional /pending will only return records with 'status' = 'pending'
+// When called with additional /completed will only return records with 'status' = 'completed'
 app.get('/getRentals/:opt', (req, res) => {
   /*
   Returns like: {
@@ -97,10 +99,16 @@ app.get('/getRentals/:opt', (req, res) => {
   JOIN product ON rental.id_product = product.id_product
   JOIN customer ON rental.id_customer = customer.id_customer
   WHERE rental.status = 'pending';`
-  : `SELECT rental.id_rental, rental.id_product, rental.id_customer, product.name AS product, CONCAT(customer.name, ' ', customer.surname) AS	customer, rental.rent_date, rental.return_date, rental.status
-  FROM rental
-  JOIN product ON rental.id_product = product.id_product
-  JOIN customer ON rental.id_customer = customer.id_customer;`
+  : req.params.opt === 'completed' ? 
+    `SELECT rental.id_rental, rental.id_product, rental.id_customer, product.name AS product, CONCAT(customer.name, ' ', customer.surname) AS	customer, rental.rent_date, rental.return_date, rental.status
+    FROM rental
+    JOIN product ON rental.id_product = product.id_product
+    JOIN customer ON rental.id_customer = customer.id_customer
+    WHERE rental.status = 'completed';`
+    : `SELECT rental.id_rental, rental.id_product, rental.id_customer, product.name AS product, CONCAT(customer.name, ' ', customer.surname) AS	customer, rental.rent_date, rental.return_date, rental.status
+      FROM rental
+      JOIN product ON rental.id_product = product.id_product
+      JOIN customer ON rental.id_customer = customer.id_customer;`
   );
   pool.query(query, (error, results, fields) => {
     if (error) throw error;
